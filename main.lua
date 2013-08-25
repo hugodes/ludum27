@@ -11,7 +11,11 @@ function love.load()
 	player_x = 5*80
 	player_y = 4*80
 	player_speed = 450
-	player_size=0.125
+	player_size_ini = 0.125
+	player_size=player_size_ini
+	player_growth=0.05
+	player_size_max=player_size_ini+6*player_growth
+	player_size_min=player_size_ini-6*player_growth
 	stime = love.timer.getTime()
 	timer=0
 	timer_offset=0
@@ -33,16 +37,16 @@ function love.load()
 				pnj_pos[i][j]["type"]=random_number
 				if random_number == 1 then
 					pnj_pos[i][j]["pos_x"]=80*i
-					pnj_pos[i][j]["pos_y"]=80*j+22
+					pnj_pos[i][j]["pos_y"]=80*j+22+40
 					pnj_pos[i][j]["width"]=80
 					pnj_pos[i][j]["height"]=35
 				elseif random_number == 2 then
 					pnj_pos[i][j]["pos_x"]=80*i+50
-					pnj_pos[i][j]["pos_y"]=80*j+40
+					pnj_pos[i][j]["pos_y"]=80*j+40+40
 					pnj_pos[i][j]["radius"]=20
 				elseif random_number == 3 then
 					pnj_pos[i][j]["pos_x"]=80*i+40
-					pnj_pos[i][j]["pos_y"]=80*j+40
+					pnj_pos[i][j]["pos_y"]=80*j+40+40
 					pnj_pos[i][j]["radius"]=20
 				end
 			end
@@ -55,6 +59,12 @@ end
 function love.update(dt)
 	ntime = love.timer.getTime()
 	timer = 10-(ntime-stime)+timer_offset
+	if timer > 10 then
+		timer =10
+	end
+	if timer <= 0 then
+		love.event.quit()
+	end
 	
 
 	if love.keyboard.isDown("right") then
@@ -108,7 +118,16 @@ function love.update(dt)
 				pnj_pos[i][j]["width"],
 				pnj_pos[i][j]["height"]) then
 					pnj_pos[i][j]["type"]=0
-					player_size = player_size + player_size*0.2
+					new_player_size = player_size + player_growth
+					print(player_size_max)
+					print(player_size)
+					print(player_size_max -player_size_min)
+					print(player_size-player_size_min)
+					if new_player_size>=player_size_max-player_growth then
+						love.event.quit()
+					else
+						player_size=new_player_size
+					end
 				end
 			elseif pnj_pos[i][j]["type"]==2 then
 				if useful.col_circle_circle(player_hb["pos_x"],
@@ -118,7 +137,10 @@ function love.update(dt)
 				pnj_pos[i][j]["pos_y"],
 				pnj_pos[i][j]["radius"]) then
 					pnj_pos[i][j]["type"]=0
-					player_size = player_size -player_size*0.2
+					new_player_size = player_size - player_growth
+					if new_player_size >= player_size_min then
+						player_size=new_player_size
+					end
 				end
 			elseif pnj_pos[i][j]["type"]==3 then
 				if useful.col_circle_circle(player_hb["pos_x"],
@@ -143,7 +165,7 @@ function love.draw()
 		for j=0,6 do
 			--print(pnj_pos[i][j])
 			if pnj[pnj_pos[i][j]["type"]] then
-				love.graphics.draw(pnj[pnj_pos[i][j]["type"]], i*80, j*80)
+				love.graphics.draw(pnj[pnj_pos[i][j]["type"]], i*80, j*80+40)
 				if pnj_pos[i][j]["type"] == 1 then
 					love.graphics.rectangle("line",
 					pnj_pos[i][j]["pos_x"],
@@ -162,4 +184,12 @@ function love.draw()
 		end
 	end
 	love.graphics.draw(foreground)
+	--drawing of bars
+	time_bar_width = 160/10*timer
+	love.graphics.setColor(182,168,97)
+	love.graphics.rectangle("fill",121,18,time_bar_width,24)
+	love.graphics.setColor(127,180,101)
+	player_size_bar_width = 160/(player_size_max-player_size_min)*(player_size-player_size_min)
+	love.graphics.rectangle("fill",544,18,player_size_bar_width,24)
+	love.graphics.setColor(255, 255, 255)
 end
