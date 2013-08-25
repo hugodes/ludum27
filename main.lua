@@ -4,6 +4,9 @@ function love.load()
 	screen_w = 800
 	screen_h = 600
 
+	--load the background
+	background = love.graphics.newImage("images/backgrounds/Fond1.png")
+	foreground = love.graphics.newImage("images/backgrounds/Fond2.png")
 	player = love.graphics.newImage("images/characters/Pj_Blop.png")
 	player_x = 5*80
 	player_y = 4*80
@@ -133,6 +136,7 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.draw(background)
 	love.graphics.print(timer, 0, 0)
 	love.graphics.draw(player, player_x, player_y, 0, player_size, player_size, 130, 130)
 	for i=0,9 do
@@ -157,4 +161,5 @@ function love.draw()
 			end
 		end
 	end
+	love.graphics.draw(foreground)
 end
