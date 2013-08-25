@@ -46,6 +46,9 @@ function love.load()
 	pnj[1]=love.graphics.newImage("images/pnj/Good_Blop_walk.png")
 	pnj[2]=love.graphics.newImage("images/pnj/Bad_Blop_walk.png")
 	pnj[3]=love.graphics.newImage("images/pnj/Time_Blop_Walk.png")
+	pnj[4]=love.graphics.newImage("images/pnj/Good_Blop_Death.png")
+	pnj[5]=love.graphics.newImage("images/pnj/Bad_Blop_Death.png")
+	pnj[6]=love.graphics.newImage("images/pnj/Time_Blop_Death.png")
 	pnj_quad={}
 	for i=1, 8 do
 		pnj_quad[i]=love.graphics.newQuad((i-1)*80,0,80,80,80*8,80)
@@ -150,6 +153,17 @@ function love.update(dt)
 				current_frame = 1
 			end
 		end
+
+		for i=0,9 do
+			for j=0,6 do
+				if pnj_pos[i][j]["type"]>3 and pnj_pos[i][j].type<7 then
+					if pnj_pos[i][j].current_state <= 7
+						pnj_pos[i][j].current_state= pnj_pos[i][j].current_state +1
+					else pnj_pos[i][j].type=0
+					end
+				end
+			end
+		end
 		
 		ntime = love.timer.getTime()
 		timer = 10-(ntime-stime)+timer_offset
@@ -210,7 +224,8 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["width"],
 					pnj_pos[i][j]["height"]) then
-						pnj_pos[i][j]["type"]=0
+						pnj_pos[i][j]["type"]=4
+						pnj_pos[i][j].current_frame=1
 						new_player_size = player_size + player_growth
 						if new_player_size>=player_size_max-player_growth then
 							gamestate="victory"
@@ -225,7 +240,8 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_x"],
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["radius"]) then
-						pnj_pos[i][j]["type"]=0
+						pnj_pos[i][j]["type"]=5
+						pnj_pos[i][j].current_frame=1
 						new_player_size = player_size - player_growth
 						if new_player_size > player_size_min then
 							player_size=new_player_size
@@ -240,7 +256,8 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_x"],
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["radius"]) then
-						pnj_pos[i][j]["type"]=0
+						pnj_pos[i][j]["type"]=5
+						pnj_pos[i][j].current_frame=1
 						timer_offset=timer_offset+0.5
 					end
 				end
