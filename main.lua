@@ -8,6 +8,9 @@ function love.load()
 	frame_time=0.1
 	time_since=0
 	
+	font = love.graphics.newFont(30)
+	update_true = false
+	
 	--load the menu
 	menu = love.graphics.newImage("images/menu/menu.png")
 	controls = love.graphics.newImage("images/menu/controls.png")
@@ -124,6 +127,7 @@ function love.update(dt)
 				random_number=math.random(4)-1
 				if random_number>0 then
 					pnj_pos[i][j]["type"]=random_number
+					pnj_pos[i][j].current_frame=math.random(8)
 					if random_number == 1 then
 						pnj_pos[i][j]["pos_x"]=80*i
 						pnj_pos[i][j]["pos_y"]=80*j+22+40
@@ -147,19 +151,31 @@ function love.update(dt)
 	elseif gamestate=="game" then
 		time_since=time_since+dt
 		if time_since > frame_time then
-			current_frame=current_frame+1
+			update_true = true
 			time_since = time_since -frame_time
-			if current_frame > 8 then
-				current_frame = 1
+			if current_frame >= 8 then
+				current_frame=1
+			else
+				current_frame = current_frame +1
 			end
+		else
+			update_true=false
 		end
 
-		for i=0,9 do
-			for j=0,6 do
-				if pnj_pos[i][j]["type"]>3 and pnj_pos[i][j].type<7 then
-					if pnj_pos[i][j].current_state <= 7
-						pnj_pos[i][j].current_state= pnj_pos[i][j].current_state +1
-					else pnj_pos[i][j].type=0
+		if update_true then
+			for i=0,9 do
+				for j=0,6 do
+					if pnj_pos[i][j]["type"]>3 and pnj_pos[i][j].type<7 then
+						if pnj_pos[i][j].current_frame <= 7 then
+							pnj_pos[i][j].current_frame= pnj_pos[i][j].current_frame +1
+						else pnj_pos[i][j].type=0
+						end
+					elseif pnj_pos[i][j].type>0 and pnj_pos[i][j].type<4 then
+						if pnj_pos[i][j].current_frame <= 7 then
+							pnj_pos[i][j].current_frame= pnj_pos[i][j].current_frame +1
+						else
+							pnj_pos[i][j].current_frame = 1
+						end
 					end
 				end
 			end
@@ -256,7 +272,7 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_x"],
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["radius"]) then
-						pnj_pos[i][j]["type"]=5
+						pnj_pos[i][j]["type"]=6
 						pnj_pos[i][j].current_frame=1
 						timer_offset=timer_offset+0.5
 					end
@@ -273,6 +289,8 @@ function love.draw()
 		love.graphics.draw(victory)
 	elseif	gamestate=="death" then
 		love.graphics.draw(death)
+		love.graphics.setFont(font)
+		love.graphics.print(level,423,320)
 	elseif gamestate=="controls" then
 		love.graphics.draw(controls)
 	elseif gamestate=="game" then
@@ -283,7 +301,7 @@ function love.draw()
 			for j=0,6 do
 				--print(pnj_pos[i][j])
 				if pnj[pnj_pos[i][j]["type"]] then
-					love.graphics.drawq(pnj[pnj_pos[i][j]["type"]], pnj_quad[current_frame], i*80, j*80+40)
+					love.graphics.drawq(pnj[pnj_pos[i][j]["type"]], pnj_quad[pnj_pos[i][j].current_frame], i*80, j*80+40)
 					if pnj_pos[i][j]["type"] == 1 then
 						--love.graphics.rectangle("line",
 						--pnj_pos[i][j]["pos_x"],
