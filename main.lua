@@ -30,10 +30,16 @@ function love.load()
 	player_growth=0.02
 	player_size_max=player_size_ini+6*player_growth
 	player_size_min=player_size_ini-6*player_growth
-	print(player_size_min)
-	timer=0
-	timer_offset=0
 	
+	player_hb={}
+	pnj_pos = {}
+	for i=0, 9 do
+		pnj_pos[i]={}
+		for j=0, 7 do
+			pnj_pos[i][j]={}
+		end
+	end
+
 	--loading our pnj images
 	pnj = {}
 	pnj[0]=nil -- pas de pnj
@@ -44,41 +50,17 @@ function love.load()
 	for i=1, 8 do
 		pnj_quad[i]=love.graphics.newQuad((i-1)*80,0,80,80,80*8,80)
 	end
-	--pnj positions and hit boxes
-	pnj_pos = {}
-	for i=0, 9 do
-		pnj_pos[i]={}
-		for j=0, 7 do
-			pnj_pos[i][j]={}
-			random_number=math.random(4)-1
-			if random_number>0 then
-				pnj_pos[i][j]["type"]=random_number
-				if random_number == 1 then
-					pnj_pos[i][j]["pos_x"]=80*i
-					pnj_pos[i][j]["pos_y"]=80*j+22+40
-					pnj_pos[i][j]["width"]=80
-					pnj_pos[i][j]["height"]=35
-				elseif random_number == 2 then
-					pnj_pos[i][j]["pos_x"]=80*i+50
-					pnj_pos[i][j]["pos_y"]=80*j+40+40
-					pnj_pos[i][j]["radius"]=20
-				elseif random_number == 3 then
-					pnj_pos[i][j]["pos_x"]=80*i+40
-					pnj_pos[i][j]["pos_y"]=80*j+40+40
-					pnj_pos[i][j]["radius"]=20
-				end
-			end
-		end
-	end
-	--position de départ du joueur
-	pnj_pos[5][4]["type"]=0
+
+	timer=0
+	timer_offset=0
+	stime=0
 end
 
 function love.mousereleased(x, y, button)
 	if gamestate=="menu" and x>302 and x<302+205 then
 		if y>278 and y<278+70 then
+			level=1
 			gamestate="next_level"
-			stime = love.timer.getTime()
 		elseif y>369 and y<369+70 then
 			gamestate="controls"
 		elseif y>463 and y<463+70 then
@@ -89,25 +71,77 @@ function love.mousereleased(x, y, button)
 	elseif gamestate=="game" and x>335 and x<335+130 and y>4 and y<4+42 then
 		gamestate="menu"
 	elseif gamestate=="victory" and x>592 and x<592+189 and y>499 and y<499+61 then
-		gamestate="menu"
+		gamestate="next_level"
 		level=level+1
 	end
 end
 
 function love.keyreleased(key)
 	if key=="escape" then
-		gamestate="menu"
+		if gamestate  == "menu" then
+			love.event.quit()
+		else
+			gamestate="menu"
+		end
 	end
 	if key=="return" then
-		if gamestate=="menu" or gamestate=="death" then
-			gamestate="game"
-			stime = love.timer.getTime()
+		if gamestate=="menu" then
+			level=1
+			gamestate="next_level"
+		elseif gamestate=="victory" then
+			gamestate="next_level"
+			level=level+1
+		elseif gamestate=="death" then
+			gamestate="menu"
 		end
 	end
 end
 
 function love.update(dt)
-	if gamestate=="game" then
+
+	if gamestate=="next_level" then
+		--initialisations
+		timer=0
+		timer_offset=0
+		stime = love.timer.getTime()
+
+		player_x = 5*80
+		player_y = 4*80
+		player_size=player_size_ini
+		player_growth=0.02
+
+		--pnj positions and hit boxes
+		for i=0, 9 do
+			for j=0, 7 do
+				pnj_pos[i][j].type = 0
+			end
+		end
+		for i=0, 9 do
+			for j=0, 7 do
+				random_number=math.random(4)-1
+				if random_number>0 then
+					pnj_pos[i][j]["type"]=random_number
+					if random_number == 1 then
+						pnj_pos[i][j]["pos_x"]=80*i
+						pnj_pos[i][j]["pos_y"]=80*j+22+40
+						pnj_pos[i][j]["width"]=80
+						pnj_pos[i][j]["height"]=35
+					elseif random_number == 2 then
+						pnj_pos[i][j]["pos_x"]=80*i+50
+						pnj_pos[i][j]["pos_y"]=80*j+40+40
+						pnj_pos[i][j]["radius"]=20
+					elseif random_number == 3 then
+						pnj_pos[i][j]["pos_x"]=80*i+40
+						pnj_pos[i][j]["pos_y"]=80*j+40+40
+						pnj_pos[i][j]["radius"]=20
+					end
+				end
+			end
+		end
+		--position de départ du joueur
+		pnj_pos[5][4]["type"]=0
+
+	elseif gamestate=="game" then
 		time_since=time_since+dt
 		if time_since > frame_time then
 			current_frame=current_frame+1
@@ -162,7 +196,6 @@ function love.update(dt)
 				player_y=new_pos_y
 			end
 		end
-		player_hb={}
 		player_hb["pos_x"]=player_x
 		player_hb["pos_y"]=player_y
 		player_hb["radius"]=130*player_size
@@ -235,19 +268,19 @@ function love.draw()
 				if pnj[pnj_pos[i][j]["type"]] then
 					love.graphics.drawq(pnj[pnj_pos[i][j]["type"]], pnj_quad[current_frame], i*80, j*80+40)
 					if pnj_pos[i][j]["type"] == 1 then
-						love.graphics.rectangle("line",
-						pnj_pos[i][j]["pos_x"],
-						pnj_pos[i][j]["pos_y"],
-						pnj_pos[i][j]["width"],
-						pnj_pos[i][j]["height"])
+						--love.graphics.rectangle("line",
+						--pnj_pos[i][j]["pos_x"],
+						--pnj_pos[i][j]["pos_y"],
+						--pnj_pos[i][j]["width"],
+						--pnj_pos[i][j]["height"])
 					else
-						love.graphics.circle("line",pnj_pos[i][j]["pos_x"],
-						pnj_pos[i][j]["pos_y"],
-						pnj_pos[i][j]["radius"])
+						--love.graphics.circle("line",pnj_pos[i][j]["pos_x"],
+						--pnj_pos[i][j]["pos_y"],
+						--pnj_pos[i][j]["radius"])
 					end
-					love.graphics.circle("line",player_hb["pos_x"],
-					player_hb["pos_y"],
-					player_hb["radius"])
+					--love.graphics.circle("line",player_hb["pos_x"],
+					--player_hb["pos_y"],
+					--player_hb["radius"])
 				end
 			end
 		end
@@ -260,5 +293,7 @@ function love.draw()
 		player_size_bar_width = 160/(player_size_max-player_size_min)*(player_size-player_size_min)
 		love.graphics.rectangle("fill",544,18,player_size_bar_width,24)
 		love.graphics.setColor(255, 255, 255)
+	elseif gamestate=="next_level" then
+		gamestate="game"
 	end
 end
