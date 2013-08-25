@@ -3,6 +3,7 @@ require("useful")
 function love.load()
 	
 	gamestate="menu"
+	level=1
 	current_frame=1
 	frame_time=0.1
 	time_since=0
@@ -76,7 +77,7 @@ end
 function love.mousereleased(x, y, button)
 	if gamestate=="menu" and x>302 and x<302+205 then
 		if y>278 and y<278+70 then
-			gamestate="game"
+			gamestate="next_level"
 			stime = love.timer.getTime()
 		elseif y>369 and y<369+70 then
 			gamestate="controls"
@@ -87,8 +88,9 @@ function love.mousereleased(x, y, button)
 		gamestate="menu"
 	elseif gamestate=="game" and x>335 and x<335+130 and y>4 and y<4+42 then
 		gamestate="menu"
-	elseif gamestate=="nextlevel" and x>592 and x<592+189 and y>499 and y<499+61 then
+	elseif gamestate=="victory" and x>592 and x<592+189 and y>499 and y<499+61 then
 		gamestate="menu"
+		level=level+1
 	end
 end
 
@@ -178,7 +180,7 @@ function love.update(dt)
 						pnj_pos[i][j]["type"]=0
 						new_player_size = player_size + player_growth
 						if new_player_size>=player_size_max-player_growth then
-							gamestate="nextlevel"
+							gamestate="victory"
 						else
 							player_size=new_player_size
 						end
@@ -217,7 +219,7 @@ end
 function love.draw()
 	if gamestate=="menu" then
 		love.graphics.draw(menu)
-	elseif gamestate=="nextlevel" then
+	elseif gamestate=="victory" then
 		love.graphics.draw(victory)
 	elseif	gamestate=="death" then
 		love.graphics.draw(death)
