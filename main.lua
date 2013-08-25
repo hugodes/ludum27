@@ -1,8 +1,11 @@
 require("useful")
 
 function love.load()
-	screen_w = 800
-	screen_h = 600
+	
+	gamestate="menu"
+	
+	--load the menu
+	menu = love.graphics.newImage("images/menu/menu.png")
 
 	--load the background
 	background = love.graphics.newImage("images/backgrounds/Fond1.png")
@@ -56,101 +59,111 @@ function love.load()
 	pnj_pos[5][4]["type"]=0
 end
 
+function love.mousereleased(x, y, button)
+	if gamestate=="menu" then
+		if x>302 and x>302+205 and y>278 and y<278+70 then
+			gamestate="game"
+		end
+	end
+end
+
 function love.update(dt)
-	ntime = love.timer.getTime()
-	timer = 10-(ntime-stime)+timer_offset
-	if timer > 10 then
-		timer =10
-	end
-	if timer <= 0 then
-		love.event.quit()
-	end
-	
-
-	if love.keyboard.isDown("right") then
-		new_pos_x = player_x + (player_speed * dt)
-		if new_pos_x > 800 then
-			player_x=799
-		else
-			player_x=new_pos_x
+	if gamestate=="game" then
+		ntime = love.timer.getTime()
+		timer = 10-(ntime-stime)+timer_offset
+		if timer > 10 then
+			timer =10
 		end
-	end
-
-	if love.keyboard.isDown("left") then
-		new_pos_x = player_x -(player_speed*dt)
-		if new_pos_x < 1 then
-			player_x=1
-		else
-			player_x=new_pos_x
+		if timer <= 0 then
+			love.event.quit()
 		end
-	end
+		
 
-	if love.keyboard.isDown("up") then
-		new_pos_y = player_y -(player_speed *dt)
-		if new_pos_y<1 then
-			player_y=1
-		else
-			player_y=new_pos_y
+		if love.keyboard.isDown("right") then
+			new_pos_x = player_x + (player_speed * dt)
+			if new_pos_x > 800 then
+				player_x=799
+			else
+				player_x=new_pos_x
+			end
 		end
-	end
 
-	if love.keyboard.isDown("down") then
-		new_pos_y = player_y +(player_speed*dt)
-		if new_pos_y >600 then
-			player_y=599
-		else
-			player_y=new_pos_y
+		if love.keyboard.isDown("left") then
+			new_pos_x = player_x -(player_speed*dt)
+			if new_pos_x < 1 then
+				player_x=1
+			else
+				player_x=new_pos_x
+			end
 		end
-	end
-	player_hb={}
-	player_hb["pos_x"]=player_x
-	player_hb["pos_y"]=player_y
-	player_hb["radius"]=130*player_size
-	
-	for i=0,9 do
-		for j=0,6 do
-			if pnj_pos[i][j]["type"]==1 then
-				if useful.col_circle_rectangle(player_hb["pos_x"],
-				player_hb["pos_y"],
-				player_hb["radius"],
-				pnj_pos[i][j]["pos_x"],
-				pnj_pos[i][j]["pos_y"],
-				pnj_pos[i][j]["width"],
-				pnj_pos[i][j]["height"]) then
-					pnj_pos[i][j]["type"]=0
-					new_player_size = player_size + player_growth
-					print(player_size_max)
-					print(player_size)
-					print(player_size_max -player_size_min)
-					print(player_size-player_size_min)
-					if new_player_size>=player_size_max-player_growth then
-						love.event.quit()
-					else
-						player_size=new_player_size
+
+		if love.keyboard.isDown("up") then
+			new_pos_y = player_y -(player_speed *dt)
+			if new_pos_y<1 then
+				player_y=1
+			else
+				player_y=new_pos_y
+			end
+		end
+
+		if love.keyboard.isDown("down") then
+			new_pos_y = player_y +(player_speed*dt)
+			if new_pos_y >600 then
+				player_y=599
+			else
+				player_y=new_pos_y
+			end
+		end
+		player_hb={}
+		player_hb["pos_x"]=player_x
+		player_hb["pos_y"]=player_y
+		player_hb["radius"]=130*player_size
+		
+		for i=0,9 do
+			for j=0,6 do
+				if pnj_pos[i][j]["type"]==1 then
+					if useful.col_circle_rectangle(player_hb["pos_x"],
+					player_hb["pos_y"],
+					player_hb["radius"],
+					pnj_pos[i][j]["pos_x"],
+					pnj_pos[i][j]["pos_y"],
+					pnj_pos[i][j]["width"],
+					pnj_pos[i][j]["height"]) then
+						pnj_pos[i][j]["type"]=0
+						new_player_size = player_size + player_growth
+						print(player_size_max)
+						print(player_size)
+						print(player_size_max -player_size_min)
+						print(player_size-player_size_min)
+						if new_player_size>=player_size_max-player_growth then
+							love.event.quit()
+						else
+							player_size=new_player_size
+						end
 					end
-				end
-			elseif pnj_pos[i][j]["type"]==2 then
-				if useful.col_circle_circle(player_hb["pos_x"],
-				player_hb["pos_y"],
-				player_hb["radius"],
-				pnj_pos[i][j]["pos_x"],
-				pnj_pos[i][j]["pos_y"],
-				pnj_pos[i][j]["radius"]) then
-					pnj_pos[i][j]["type"]=0
-					new_player_size = player_size - player_growth
-					if new_player_size >= player_size_min then
-						player_size=new_player_size
+				elseif pnj_pos[i][j]["type"]==2 then
+					if useful.col_circle_circle(player_hb["pos_x"],
+					player_hb["pos_y"],
+					player_hb["radius"],
+					pnj_pos[i][j]["pos_x"],
+					pnj_pos[i][j]["pos_y"],
+					pnj_pos[i][j]["radius"]) then
+						pnj_pos[i][j]["type"]=0
+						new_player_size = player_size - player_growth
+						if new_player_size >= player_size_min then
+							player_size=new_player_size
+						end
 					end
-				end
-			elseif pnj_pos[i][j]["type"]==3 then
-				if useful.col_circle_circle(player_hb["pos_x"],
-				player_hb["pos_y"],
-				player_hb["radius"],
-				pnj_pos[i][j]["pos_x"],
-				pnj_pos[i][j]["pos_y"],
-				pnj_pos[i][j]["radius"]) then
-					pnj_pos[i][j]["type"]=0
-					timer_offset=timer_offset+0.5
+				elseif pnj_pos[i][j]["type"]==3 then
+					if useful.col_circle_circle(player_hb["pos_x"],
+					player_hb["pos_y"],
+					player_hb["radius"],
+					pnj_pos[i][j]["pos_x"],
+					pnj_pos[i][j]["pos_y"],
+					pnj_pos[i][j]["radius"]) then
+						pnj_pos[i][j]["type"]=0
+						timer_offset=timer_offset+0.5
+					end
 				end
 			end
 		end
@@ -158,38 +171,42 @@ function love.update(dt)
 end
 
 function love.draw()
-	love.graphics.draw(background)
-	love.graphics.print(timer, 0, 0)
-	love.graphics.draw(player, player_x, player_y, 0, player_size, player_size, 130, 130)
-	for i=0,9 do
-		for j=0,6 do
-			--print(pnj_pos[i][j])
-			if pnj[pnj_pos[i][j]["type"]] then
-				love.graphics.draw(pnj[pnj_pos[i][j]["type"]], i*80, j*80+40)
-				if pnj_pos[i][j]["type"] == 1 then
-					love.graphics.rectangle("line",
-					pnj_pos[i][j]["pos_x"],
-					pnj_pos[i][j]["pos_y"],
-					pnj_pos[i][j]["width"],
-					pnj_pos[i][j]["height"])
-				else
-					love.graphics.circle("line",pnj_pos[i][j]["pos_x"],
-					pnj_pos[i][j]["pos_y"],
-					pnj_pos[i][j]["radius"])
+	if gamestate=="menu" then
+		love.graphics.draw(menu)
+	elseif gamestate=="game" then
+		love.graphics.draw(background)
+		love.graphics.print(timer, 0, 0)
+		love.graphics.draw(player, player_x, player_y, 0, player_size, player_size, 130, 130)
+		for i=0,9 do
+			for j=0,6 do
+				--print(pnj_pos[i][j])
+				if pnj[pnj_pos[i][j]["type"]] then
+					love.graphics.draw(pnj[pnj_pos[i][j]["type"]], i*80, j*80+40)
+					if pnj_pos[i][j]["type"] == 1 then
+						love.graphics.rectangle("line",
+						pnj_pos[i][j]["pos_x"],
+						pnj_pos[i][j]["pos_y"],
+						pnj_pos[i][j]["width"],
+						pnj_pos[i][j]["height"])
+					else
+						love.graphics.circle("line",pnj_pos[i][j]["pos_x"],
+						pnj_pos[i][j]["pos_y"],
+						pnj_pos[i][j]["radius"])
+					end
+					love.graphics.circle("line",player_hb["pos_x"],
+					player_hb["pos_y"],
+					player_hb["radius"])
 				end
-				love.graphics.circle("line",player_hb["pos_x"],
-				player_hb["pos_y"],
-				player_hb["radius"])
 			end
 		end
+		love.graphics.draw(foreground)
+		--drawing of bars
+		time_bar_width = 160/10*timer
+		love.graphics.setColor(182,168,97)
+		love.graphics.rectangle("fill",121,18,time_bar_width,24)
+		love.graphics.setColor(127,180,101)
+		player_size_bar_width = 160/(player_size_max-player_size_min)*(player_size-player_size_min)
+		love.graphics.rectangle("fill",544,18,player_size_bar_width,24)
+		love.graphics.setColor(255, 255, 255)
 	end
-	love.graphics.draw(foreground)
-	--drawing of bars
-	time_bar_width = 160/10*timer
-	love.graphics.setColor(182,168,97)
-	love.graphics.rectangle("fill",121,18,time_bar_width,24)
-	love.graphics.setColor(127,180,101)
-	player_size_bar_width = 160/(player_size_max-player_size_min)*(player_size-player_size_min)
-	love.graphics.rectangle("fill",544,18,player_size_bar_width,24)
-	love.graphics.setColor(255, 255, 255)
 end
