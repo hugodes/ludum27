@@ -29,3 +29,16 @@ function useful.col_circle_circle(x1,y1,r1,x2,y2,r2)
 		return true
 	end
 end
+
+function useful.level_random(level)
+	number=math.random(100)
+	if number > 0 and number < 21 then
+		return 1
+	elseif number < (level-1)*2+21 then
+		return 2
+	elseif number < (level-1)*2*2+21 then
+		return 3
+	else
+		return 0
+	end
+end
