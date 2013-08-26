@@ -295,7 +295,6 @@ function love.draw()
 		love.graphics.draw(controls)
 	elseif gamestate=="game" then
 		love.graphics.draw(background)
-		love.graphics.print(timer, 0, 0)
 		love.graphics.drawq(player, player_quad[current_frame], player_x, player_y, 0, player_size, player_size, 130, 130)
 		for i=0,9 do
 			for j=0,6 do
