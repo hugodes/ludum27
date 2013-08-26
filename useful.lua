@@ -32,12 +32,12 @@ end
 
 function useful.level_random(level)
 	number=math.random(100)
-	if number > 0 and number < 21 then
+	if number > 0 and number < 17 then
 		return 1
-	elseif number < (level-1)*2+21 then
-		return 2
-	elseif number < (level-1)*2*2+21 then
+	elseif number < (level-1)*4+21 then
 		return 3
+	elseif number < (level-1)*4*2+21 then
+		return 2
 	else
 		return 0
 	end
