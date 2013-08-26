@@ -11,6 +11,13 @@ function love.load()
 	font = love.graphics.newFont(30)
 	update_true = false
 	
+	--load sounds
+	good_sound = love.audio.newSource("sounds/sound_effects/Good.wav", "static")
+	bad_sound = love.audio.newSource("sounds/sound_effects/Bad.wav", "static")
+	time_sound = love.audio.newSource("sounds/sound_effects/Time.wav", "static")
+	victory_sound = love.audio.newSource("sounds/sound_effects/Victory.wav", "static")
+	death_sound = love.audio.newSource("sounds/sound_effects/Death.wav", "static")
+	
 	--load the menu
 	menu = love.graphics.newImage("images/menu/menu.png")
 	controls = love.graphics.newImage("images/menu/controls.png")
@@ -188,6 +195,8 @@ function love.update(dt)
 		end
 		if timer <= 0 then
 			gamestate="death"
+			love.audio.stop()
+			love.audio.play(death_sound)
 		end
 		
 
@@ -240,11 +249,15 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["width"],
 					pnj_pos[i][j]["height"]) then
+						love.audio.stop()
+						love.audio.play(good_sound)
 						pnj_pos[i][j]["type"]=4
 						pnj_pos[i][j].current_frame=1
 						new_player_size = player_size + player_growth
 						if new_player_size>=player_size_max-player_growth then
 							gamestate="victory"
+							love.audio.stop()
+							love.audio.play(victory_sound)
 						else
 							player_size=new_player_size
 						end
@@ -256,6 +269,8 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_x"],
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["radius"]) then
+						love.audio.stop()
+						love.audio.play(bad_sound)
 						pnj_pos[i][j]["type"]=5
 						pnj_pos[i][j].current_frame=1
 						new_player_size = player_size - player_growth
@@ -272,6 +287,8 @@ function love.update(dt)
 					pnj_pos[i][j]["pos_x"],
 					pnj_pos[i][j]["pos_y"],
 					pnj_pos[i][j]["radius"]) then
+						love.audio.stop()
+						love.audio.play(time_sound)
 						pnj_pos[i][j]["type"]=6
 						pnj_pos[i][j].current_frame=1
 						timer_offset=timer_offset+0.5
