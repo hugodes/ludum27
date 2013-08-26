@@ -124,7 +124,7 @@ function love.update(dt)
 		end
 		for i=0, 9 do
 			for j=0, 7 do
-				random_number=math.random(4)-1
+				random_number=useful.level_random(level)
 				if random_number>0 then
 					pnj_pos[i][j]["type"]=random_number
 					pnj_pos[i][j].current_frame=math.random(8)
