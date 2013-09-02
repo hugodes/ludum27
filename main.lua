@@ -1,25 +1,13 @@
-	
 function love.load()
-	require("useful")
 	gstate = require("gamestate")
 	menu = require("menu")
+	victory = require("victory")
+	death = require("death")
+	controls = require("controls")
+
+	require("useful")
 	
 	gstate.switch("menu")
-	level=1
-	current_frame=1
-	frame_time=0.1
-	time_since=0
-	
-	font = love.graphics.newFont(30)
-	update_true = false
-	
-	--load sounds
-	good_sound = love.audio.newSource("sounds/sound_effects/Good.wav", "static")
-	bad_sound = love.audio.newSource("sounds/sound_effects/Bad.wav", "static")
-	time_sound = love.audio.newSource("sounds/sound_effects/Time.wav", "static")
-	victory_sound = love.audio.newSource("sounds/sound_effects/Victory.wav", "static")
-	death_sound = love.audio.newSource("sounds/sound_effects/Death.wav", "static")
-	
 
 	--load the background
 	background = love.graphics.newImage("images/backgrounds/Fond1.png")
