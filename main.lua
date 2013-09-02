@@ -1,10 +1,9 @@
-require("useful")
-gstate = require("gamestate")
-menu = require("menu")
 	
 function love.load()
+	require("useful")
+	gstate = require("gamestate")
+	menu = require("menu")
 	
-	gstate.registerEvents('draw' 'update' )
 	gstate.switch("menu")
 	level=1
 	current_frame=1
@@ -21,9 +20,6 @@ function love.load()
 	victory_sound = love.audio.newSource("sounds/sound_effects/Victory.wav", "static")
 	death_sound = love.audio.newSource("sounds/sound_effects/Death.wav", "static")
 	
-	--load the menu
-	death = love.graphics.newImage("images/menu/Death.png")
-	victory = love.graphics.newImage("images/menu/victory.png")
 
 	--load the background
 	background = love.graphics.newImage("images/backgrounds/Fond1.png")

@@ -1,7 +1,7 @@
-menu = {}
+local state = {}
 
-function menu:init(  )
-	menu = love.graphics.newImage("images/menu/menu.png")
+function state:init(  )
+	menu_bg = love.graphics.newImage("images/menu/menu.png")
 
 end
 
