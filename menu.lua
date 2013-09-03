@@ -29,3 +29,7 @@ function state:keyreleased( key )
 	end
 	
 end
+
+function state:draw( dt )
+		love.graphics.draw(menu_bg)
+end

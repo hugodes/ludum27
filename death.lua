@@ -1,7 +1,7 @@
 local state = {}
 
 function state:init(  )
-	death = love.graphics.newImage("images/menu/Death.png")
+	death_bg = love.graphics.newImage("images/menu/Death.png")
 	death_sound = love.audio.newSource("sounds/sound_effects/Death.wav", "static")
 end
 
@@ -14,4 +14,11 @@ end
 function state:keyreleased( key )
 	if key == "return" then
 		gstate.switch(menu)
+end
+
+function state:draw( dt )
+	love.graphics.draw(death_bg)
+	love.graphics.setFont(font)
+	love.graphics.print(level,423,320)
+	
 end

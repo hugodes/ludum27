@@ -1,7 +1,7 @@
 local state = {}
 
 function state:init(  )
-	victory = love.graphics.newImage("images/menu/victory.png")
+	victory_bg = love.graphics.newImage("images/menu/victory.png")
 	victory_sound = love.audio.newSource("sounds/sound_effects/Victory.wav", "static")
 end
 
@@ -17,4 +17,8 @@ function state:keyreleased( key )
 		level=level+1
 		gstate.switch(next_level)
 	end
+end
+
+function state:draw(  )
+	love.graphics.draw(victory_bg)
 end
