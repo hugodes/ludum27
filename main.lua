@@ -7,91 +7,17 @@ function love.load()
 
 	require("useful")
 	
-	gstate.switch("menu")
-
-	--load the background
-	background = love.graphics.newImage("images/backgrounds/Fond1.png")
-	foreground = love.graphics.newImage("images/backgrounds/Fond2.png")
-	player = love.graphics.newImage("images/characters/Blop_walk.png")
-	player_quad = {}
-	for i = 1 , 8 do
-		player_quad[i]=love.graphics.newQuad((i-1)*260,0,260,260,2080,260)
-	end
-	player_x = 5*80
-	player_y = 4*80
-	player_speed = 450
-	player_size_ini = 0.125
-	player_size=player_size_ini
-	player_growth=0.02
-	player_size_max=player_size_ini+6*player_growth
-	player_size_min=player_size_ini-6*player_growth
-	
-	player_hb={}
-	pnj_pos = {}
-	for i=0, 9 do
-		pnj_pos[i]={}
-		for j=0, 7 do
-			pnj_pos[i][j]={}
-		end
-	end
-
-	--loading our pnj images
-	pnj = {}
-	pnj[0]=nil -- pas de pnj
-	pnj[1]=love.graphics.newImage("images/pnj/Good_Blop_walk.png")
-	pnj[2]=love.graphics.newImage("images/pnj/Bad_Blop_walk.png")
-	pnj[3]=love.graphics.newImage("images/pnj/Time_Blop_Walk.png")
-	pnj[4]=love.graphics.newImage("images/pnj/Good_Blop_Death.png")
-	pnj[5]=love.graphics.newImage("images/pnj/Bad_Blop_Death.png")
-	pnj[6]=love.graphics.newImage("images/pnj/Time_Blop_Death.png")
-	pnj_quad={}
-	for i=1, 8 do
-		pnj_quad[i]=love.graphics.newQuad((i-1)*80,0,80,80,80*8,80)
-	end
-
-	timer=0
-	timer_offset=0
-	stime=0
+	gstate.switch(menu)
 end
 
 function love.mousereleased(x, y, button)
-	if gamestate=="menu" and x>302 and x<302+205 then
-		if y>278 and y<278+70 then
-			level=1
-			gamestate="next_level"
-		elseif y>369 and y<369+70 then
-			gamestate="controls"
-		elseif y>463 and y<463+70 then
-			love.event.quit()
-		end
-	elseif (gamestate=="controls" or gamestate=="death")and x>43 and x<43+189 and y>38 and y<38+61 then
-		gamestate="menu"
-	elseif gamestate=="game" and x>335 and x<335+130 and y>4 and y<4+42 then
-		gamestate="menu"
-	elseif gamestate=="victory" and x>592 and x<592+189 and y>499 and y<499+61 then
-		gamestate="next_level"
-		level=level+1
-	end
+	gstate.mousereleased(x, y, button)
 end
 
 function love.keyreleased(key)
-	if key=="escape" then
-		if gamestate  == "menu" then
-			love.event.quit()
-		else
-			gamestate="menu"
-		end
-	end
-	if key=="return" then
-		if gamestate=="menu" then
-			level=1
-			gamestate="next_level"
-		elseif gamestate=="victory" then
-			gamestate="next_level"
-			level=level+1
-		elseif gamestate=="death" then
-			gamestate="menu"
-		end
+	gstate.keyreleased(key)
+	if key =="escape" and gstate.current ~= menu then
+		love.event.quit()
 	end
 end
 
