@@ -1,7 +1,6 @@
 local state = {}
 
 function state:init(  )
-	level=1
 	current_frame=1
 	frame_time=0.1
 	time_since=0
@@ -57,9 +56,54 @@ function state:init(  )
 	stime=0
 end
 
+function state:enter( current, l)
+	local level = l
+	timer=0
+	timer_offset=0
+	stime = love.timer.getTime()
+
+	player_x = 5*80
+	player_y = 4*80
+	player_size=player_size_ini
+	player_growth=0.02
+
+	--pnj positions and hit boxes
+	for i=0, 9 do
+		for j=0, 7 do
+			pnj_pos[i][j].type = 0
+		end
+	end
+	for i=0, 9 do
+		for j=0, 7 do
+			random_number=useful.level_random(level)
+			if random_number>0 then
+				pnj_pos[i][j]["type"]=random_number
+				pnj_pos[i][j].current_frame=math.random(8)
+				if random_number == 1 then
+					pnj_pos[i][j]["pos_x"]=80*i
+					pnj_pos[i][j]["pos_y"]=80*j+22+40
+					pnj_pos[i][j]["width"]=80
+					pnj_pos[i][j]["height"]=35
+				elseif random_number == 2 then
+					pnj_pos[i][j]["pos_x"]=80*i+50
+					pnj_pos[i][j]["pos_y"]=80*j+40+40
+					pnj_pos[i][j]["radius"]=20
+				elseif random_number == 3 then
+					pnj_pos[i][j]["pos_x"]=80*i+40
+					pnj_pos[i][j]["pos_y"]=80*j+40+40
+					pnj_pos[i][j]["radius"]=20
+				end
+			end
+		end
+	end
+	--position de départ du joueur
+	pnj_pos[5][4]["type"]=0	
+end
+
 function state:mousereleased( x, y, button )
 	if x>335 and x<335+130 and y>4 and y<4+42 then
 		gstate.switch(menu)
+	end
 end
 
 function state:update( dt )	
@@ -101,9 +145,7 @@ function state:update( dt )
 		timer =10
 	end
 	if timer <= 0 then
-		love.audio.stop()
-		love.audio.play(death_sound)
-		gstate.switch(death)
+		gstate.switch(death, level)
 	end
 	
 
@@ -162,9 +204,7 @@ function state:update( dt )
 					pnj_pos[i][j].current_frame=1
 					new_player_size = player_size + player_growth
 					if new_player_size>=player_size_max-player_growth then
-						love.audio.stop()
-						love.audio.play(victory_sound)
-						gstate.switch(victory)
+						gstate.switch(victory, level)
 					else
 						player_size=new_player_size
 					end
@@ -184,9 +224,7 @@ function state:update( dt )
 					if new_player_size > player_size_min then
 						player_size=new_player_size
 					elseif new_player_size <= player_size_min then
-						love.audio.stop()
-						love.audio.play(death_sound)
-						gstate.switch(death)
+						gstate.switch(death, level)
 					end
 				end
 			elseif pnj_pos[i][j]["type"]==3 then

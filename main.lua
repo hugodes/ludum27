@@ -4,7 +4,7 @@ function love.load()
 	victory = require("victory")
 	death = require("death")
 	controls = require("controls")
-	next_level = require("next_level")
+	game = require("game")
 
 	require("useful")	
 	
@@ -28,7 +28,5 @@ function love.update(dt)
 end
 
 function love.draw()
-	if gamestate=="next_level" then
-		gamestate="game"
-	end
+	gstate.draw()
 end

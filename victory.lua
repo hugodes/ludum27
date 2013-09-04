@@ -5,17 +5,21 @@ function state:init(  )
 	victory_sound = love.audio.newSource("sounds/sound_effects/Victory.wav", "static")
 end
 
+function state:enter( current, l)
+	love.audio.stop()
+	love.audio.play(victory_sound)
+	local level = l
+end
+
 function state:mousereleased( x, y, button )
 	if x>592 and x<592+189 and y>499 and y<499+61 then
-		gstate.switch(next_level)
-		level=level+1
+		gstate.switch(game, level)
 	end
 end
 
 function state:keyreleased( key )
 	if key == "return" then
-		level=level+1
-		gstate.switch(next_level)
+		gstate.switch(game, level)
 	end
 end
 

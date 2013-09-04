@@ -5,6 +5,13 @@ function state:init(  )
 	death_sound = love.audio.newSource("sounds/sound_effects/Death.wav", "static")
 end
 
+function state:enter( current , l )
+	local level = l
+	love.audio.stop()
+	love.audio.play(death_sound)
+	
+end
+
 function state:mousreleased( x, y, button )
 	if x>43 and x<43+189 and y>38 and y<38+61 then
 		gstate.switch(menu)
