@@ -242,3 +242,5 @@ function state:draw(  )
 	love.graphics.rectangle("fill",544,18,player_size_bar_width,24)
 	love.graphics.setColor(255, 255, 255)
 end
+
+return state

@@ -2,16 +2,16 @@ local state = {}
 
 function state:init(  )
 	menu_bg = love.graphics.newImage("images/menu/menu.png")
-
+	return state
 end
 
-function state:mousreleased( x, y, button )
+function state:mousereleased( x, y, button )
 	if x>302 and x<302+205 then
 		if y>278 and y<278+70 then
 			level=1
 			gstate.switch(next_level)
 		elseif y>369 and y<369+70 then
-			gstate.switch(controls
+			gstate.switch(controls	)
 		elseif y>463 and y<463+70 then
 			love.event.quit()
 		end
@@ -27,9 +27,10 @@ function state:keyreleased( key )
 		level=1
 		gstate.switch(game)
 	end
-	
 end
 
 function state:draw( dt )
-		love.graphics.draw(menu_bg)
+	love.graphics.draw(menu_bg)
 end
+
+return state

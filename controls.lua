@@ -1,6 +1,6 @@
 state = {}
 
-function controls:init()
+function state:init()
 	controls_bg = love.graphics.newImage("images/menu/controls.png")
 end
 
@@ -13,3 +13,5 @@ end
 function state:draw( dt )
 	love.graphics.draw(controls_bg)
 end
+
+return state

@@ -6,7 +6,7 @@ function state:init(  )
 end
 
 function state:mousereleased( x, y, button )
-	elseif x>592 and x<592+189 and y>499 and y<499+61 then
+	if x>592 and x<592+189 and y>499 and y<499+61 then
 		gstate.switch(next_level)
 		level=level+1
 	end
@@ -22,3 +22,5 @@ end
 function state:draw(  )
 	love.graphics.draw(victory_bg)
 end
+
+return state

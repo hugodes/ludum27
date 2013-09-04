@@ -6,8 +6,9 @@ function love.load()
 	controls = require("controls")
 	next_level = require("next_level")
 
-	require("useful")
+	require("useful")	
 	
+	gstate.registerEvents()
 	gstate.switch(menu)
 end
 
@@ -27,7 +28,7 @@ function love.update(dt)
 end
 
 function love.draw()
-	elseif gamestate=="next_level" then
+	if gamestate=="next_level" then
 		gamestate="game"
 	end
 end
