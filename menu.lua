@@ -18,11 +18,12 @@ function state:mousereleased( x, y, button )
 end
 
 function state:keyreleased( key )
-	if key=="escape" then
-		love.event.quit()
-	end
 	if key=="return" then
 		gstate.switch(game, 1)
+	end
+	if key=="escape" then
+		print("I can't surely be here !")
+		love.event.quit()
 	end
 end
 

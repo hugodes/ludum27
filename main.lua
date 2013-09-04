@@ -8,7 +8,6 @@ function love.load()
 
 	require("useful")	
 	
-	gstate.registerEvents()
 	gstate.switch(menu)
 end
 
@@ -17,9 +16,10 @@ function love.mousereleased(x, y, button)
 end
 
 function love.keyreleased(key)
-	gstate.keyreleased(key)
-	if key =="escape" and gstate.current ~= menu then
-		love.event.quit()
+	if key =="escape" and gstate.current() ~= menu then
+		gstate.switch(menu)
+	else
+		gstate.keyreleased(key)
 	end
 end
 

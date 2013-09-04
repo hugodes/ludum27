@@ -13,13 +13,13 @@ end
 
 function state:mousereleased( x, y, button )
 	if x>592 and x<592+189 and y>499 and y<499+61 then
-		gstate.switch(game, level)
+		gstate.switch(game, level+1)
 	end
 end
 
 function state:keyreleased( key )
 	if key == "return" then
-		gstate.switch(game, level)
+		gstate.switch(game, level+1)
 	end
 end
 

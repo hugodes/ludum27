@@ -6,7 +6,7 @@ end
 
 function state:mousereleased(x, y, button)
 	if x>43 and x<43+189 and y>38 and y<38+61 then
-		gstate.switch(next_level)
+		gstate.switch(menu)
 	end
 end
 
