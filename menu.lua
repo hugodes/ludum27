@@ -22,7 +22,6 @@ function state:keyreleased( key )
 		gstate.switch(game, 1)
 	end
 	if key=="escape" then
-		print("I can't surely be here !")
 		love.event.quit()
 	end
 end

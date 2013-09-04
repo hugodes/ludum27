@@ -8,7 +8,7 @@ end
 function state:enter( current, l)
 	love.audio.stop()
 	love.audio.play(victory_sound)
-	local level = l
+	level = l
 end
 
 function state:mousereleased( x, y, button )

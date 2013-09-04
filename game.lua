@@ -57,7 +57,7 @@ function state:init(  )
 end
 
 function state:enter( current, l)
-	local level = l
+	level = l
 	timer=0
 	timer_offset=0
 	stime = love.timer.getTime()
