@@ -132,44 +132,23 @@ function state:update( dt )
 	end
 	
 
-	if love.keyboard.isDown("right") then
-		new_pos_x = player_x + (player_speed * dt)
-		if new_pos_x > 800 then
-			player_x=799
-		else
-			player_x=new_pos_x
-		end
+	if love.keyboard.isDown("right") 
+		player.moveRight(dt)
 	end
 
 	if love.keyboard.isDown("left") then
-		new_pos_x = player_x -(player_speed*dt)
-		if new_pos_x < 1 then
-			player_x=1
-		else
-			player_x=new_pos_x
-		end
+		player.moveLeft(dt)
 	end
 
 	if love.keyboard.isDown("up") then
-		new_pos_y = player_y -(player_speed *dt)
-		if new_pos_y<1 then
-			player_y=1
-		else
-			player_y=new_pos_y
-		end
+		player.moveUp(dt)
 	end
 
 	if love.keyboard.isDown("down") then
-		new_pos_y = player_y +(player_speed*dt)
-		if new_pos_y >600 then
-			player_y=599
-		else
-			player_y=new_pos_y
-		end
+		player.moveDown(dt)
 	end
-	player_hb["pos_x"]=player_x
-	player_hb["pos_y"]=player_y
-	player_hb["radius"]=130*player_size
+
+	player.updateHB()
 	
 	for i=0,9 do
 		for j=0,6 do
