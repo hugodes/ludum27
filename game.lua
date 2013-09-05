@@ -1,6 +1,7 @@
 local state = {}
 
 function state:init(  )
+	require("player")
 	current_frame=1
 	frame_time=0.1
 	time_since=0
@@ -14,21 +15,7 @@ function state:init(  )
 
 	background = love.graphics.newImage("images/backgrounds/Fond1.png")
 	foreground = love.graphics.newImage("images/backgrounds/Fond2.png")
-	player = love.graphics.newImage("images/characters/Blop_walk.png")
-	player_quad = {}
-	for i = 1 , 8 do
-		player_quad[i]=love.graphics.newQuad((i-1)*260,0,260,260,2080,260)
-	end
-	player_x = 5*80
-	player_y = 4*80
-	player_speed = 450
-	player_size_ini = 0.125
-	player_size=player_size_ini
-	player_growth=0.02
-	player_size_max=player_size_ini+6*player_growth
-	player_size_min=player_size_ini-6*player_growth
 	
-	player_hb={}
 	pnj_pos = {}
 	for i=0, 9 do
 		pnj_pos[i]={}
@@ -51,21 +38,17 @@ function state:init(  )
 		pnj_quad[i]=love.graphics.newQuad((i-1)*80,0,80,80,80*8,80)
 	end
 
-	timer=0
-	timer_offset=0
-	stime=0
 end
 
 function state:enter( current, l)
 	level = l
+
+	player.reset()
+	
 	timer=0
 	timer_offset=0
 	stime = love.timer.getTime()
 
-	player_x = 5*80
-	player_y = 4*80
-	player_size=player_size_ini
-	player_growth=0.02
 
 	--pnj positions and hit boxes
 	for i=0, 9 do
